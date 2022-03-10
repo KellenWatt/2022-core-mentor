@@ -40,6 +40,7 @@ RobotContainer::RobotContainer() : transportSubsystem(frc::DriverStation::GetAll
   innerTimer.Start();
   innerTimer.Reset();
   transportSubsystem.SetDefaultCommand(frc2::RunCommand([this] {
+    if(frc::DriverStation::IsAutonomous()) return;
     if(!transportSubsystem.hasOuterBall() || !transportSubsystem.hasInnerBall()) {
       transportSubsystem.enableOuterBelt();
     } else {
@@ -173,8 +174,6 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::InstantCommand([]{}),
     [this]{return !climberSubsystem.isRetracted();}
   ));
-
-  frc2::JoystickButton(&control2, 7).WhenPressed(frc2::InstantCommand([this] {climberSubsystem.isRetracted();}));
 
   frc2::JoystickButton(&control2, 6).WhenPressed(toggle_lower_arms);
   frc2::JoystickButton(&control2, 5).ToggleWhenPressed(upper_arms_release);
