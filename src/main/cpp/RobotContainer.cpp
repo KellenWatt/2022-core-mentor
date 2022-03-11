@@ -40,7 +40,7 @@ RobotContainer::RobotContainer() : transportSubsystem(frc::DriverStation::GetAll
   innerTimer.Start();
   innerTimer.Reset();
   transportSubsystem.SetDefaultCommand(frc2::RunCommand([this] {
-    if(frc::DriverStation::IsAutonomous()) return;
+    if(frc::DriverStation::IsAutonomous() || control1.GetRawButton(1)) return;
     if(!transportSubsystem.hasOuterBall() || !transportSubsystem.hasInnerBall()) {
       transportSubsystem.enableOuterBelt();
     } else {
@@ -132,9 +132,9 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::RunCommand([this]{
       transportSubsystem.enableInnerBelt();
       transportSubsystem.enableOuterBelt();
-    }),
+    }, {&transportSubsystem}),
     frc2::WaitUntilCommand([this] {return transportSubsystem.hasInnerBall();}).WithTimeout(2.0_s)
-  ), {&transportSubsystem});
+  ));
   // drive forwards to line
   frc2::JoystickButton(&control1, 9).ToggleWhenPressed(DriveToLineCommand(&driveSubsystem, true));
   // drive backwards to line
