@@ -64,7 +64,7 @@ private:
     DriveToLineCommand(&driveSubsystem, false),
     frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
     DriveUntilCommand(&driveSubsystem, false, [this] {
-      return driveSubsystem.distance() <= -33;
+      return driveSubsystem.distance() <= -30;
     }),
     frc2::RunCommand([this] {
       transportSubsystem.enableInnerBelt();
