@@ -32,7 +32,8 @@ void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool c
     if(squareRot) {
         rotation = abs(rotation) * rotation;
     }
-    // mecanum drive does not inerently apply deadband to rotation
+    // mecanum drive does not inherently apply deadband to rotation, 
+    // so we do that instead.
     if(rotation < deadband) {
         frc::ApplyDeadband(rotation, deadband);
     }
@@ -41,8 +42,6 @@ void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool c
         gyro.Reset();
         mecanumDrive.DriveCartesian(ySpeed, xSpeed, rotation * constants::drive::ROTARTION_REDUCTION);
     } else {
-    //     mecanumDrive.DriveCartesian(ySpeed, xSpeed, rotation);
-    // }
         // adjust rotation to compensate for hysteresis
         // Get angle, shift to [-180,180), normalize
         double rotOffset = (gyro.GetAngle() - (360 * (gyro.GetAngle() >= 180))) / 180;
@@ -80,5 +79,4 @@ double DriveSubsystem::orientation() {
 
 bool DriveSubsystem::seesLine() {
     return lineSensor.Get();
-    // return true;
 }

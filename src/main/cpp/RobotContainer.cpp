@@ -178,8 +178,6 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&control2, 6).WhenPressed(toggle_lower_arms);
   frc2::JoystickButton(&control2, 5).ToggleWhenPressed(upper_arms_release);
 #endif
-  
-  // TODO list
 }
 
 frc2::Command* RobotContainer::autonomousCommand() {
