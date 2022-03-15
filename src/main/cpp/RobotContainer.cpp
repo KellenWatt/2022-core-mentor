@@ -116,28 +116,6 @@ void RobotContainer::ConfigureButtonBindings() {
     {&climberSubsystem}
   );
 
-  auto auto_climb = frc2::ConditionalCommand(
-    frc2::SequentialCommandGroup(
-    frc2::FunctionalCommand(
-      [this]{climberSubsystem.retractLower();},
-      []{},
-      [](bool){},
-      [this]{return climberSubsystem.isRetracted();}
-    ),
-    // frc2::InstantCommand([this]{climberSubsystem.retractLower();}),
-    // frc2::WaitUntilCommand([this]{return climberSubsystem.isRetracted();}),
-    frc2::WaitCommand(0.5_s),
-    frc2::InstantCommand([this]{climberSubsystem.extendUpper();}),
-    frc2::WaitCommand(3.0_s),
-    frc2::InstantCommand([this]{climberSubsystem.extendLower();}),
-    frc2::WaitCommand(3.0_s),
-    frc2::InstantCommand([this]{climberSubsystem.retractLower();
-                                climberSubsystem.retractUpper();})
-    ),
-    frc2::InstantCommand([]{}),
-    [this]{return !climberSubsystem.isRetracted();}
-  );
-
   // Both sets of bindings have equivalant capabilities. 
   // The only difference is which control scheme is being used.
 #ifdef USE_XBOX_CONTROLS
@@ -160,17 +138,13 @@ void RobotContainer::ConfigureButtonBindings() {
 #else
   // Button bindings for Joysticks.
   // Joystick 1 - not including driving
-  frc2::JoystickButton(&control1, 1).WhenHeld(
-    enable_transport.WithInterrupt([this]{return transportSubsystem.hasInnerBall();})
-    .WithTimeout(2.0_s)
-  );
-  // frc2::JoystickButton(&control1, 1).WhenHeld(frc2::SequentialCommandGroup(
-  //   frc2::RunCommand([this]{
-  //     transportSubsystem.enableInnerBelt();
-  //     transportSubsystem.enableOuterBelt();
-  //   }, {&transportSubsystem}),
-  //   frc2::WaitUntilCommand([this] {return transportSubsystem.hasInnerBall();}).WithTimeout(2.0_s)
-  // ));
+  frc2::JoystickButton(&control1, 1).WhenHeld(frc2::SequentialCommandGroup(
+    frc2::RunCommand([this]{
+      transportSubsystem.enableInnerBelt();
+      transportSubsystem.enableOuterBelt();
+    }, {&transportSubsystem}),
+    frc2::WaitUntilCommand([this] {return transportSubsystem.hasInnerBall();}).WithTimeout(2.0_s)
+  ));
   // drive forwards to line
   frc2::JoystickButton(&control1, 9).ToggleWhenPressed(DriveToLineCommand(&driveSubsystem, true));
   // drive backwards to line
@@ -185,7 +159,25 @@ void RobotContainer::ConfigureButtonBindings() {
   (frc2::JoystickButton(&control2, 2) && frc2::JoystickButton(&control2, 11))
       .WhileActiveOnce(reverse_intake_roller);
   frc2::JoystickButton(&control2, 4).WhenHeld(reverse_transport);
-  frc2::JoystickButton(&control2, 8).WhenPressed(auto_climb);
+  frc2::JoystickButton(&control2, 8).WhenPressed(frc2::ConditionalCommand(
+    frc2::SequentialCommandGroup(
+    frc2::FunctionalCommand(
+      [this]{climberSubsystem.retractLower();},
+      []{},
+      [](bool){},
+      [this]{return climberSubsystem.isRetracted();}
+    ),
+    frc2::WaitCommand(0.5_s),
+    frc2::InstantCommand([this]{climberSubsystem.extendUpper();}),
+    frc2::WaitCommand(3.0_s),
+    frc2::InstantCommand([this]{climberSubsystem.extendLower();}),
+    frc2::WaitCommand(3.0_s),
+    frc2::InstantCommand([this]{climberSubsystem.retractLower();
+                                climberSubsystem.retractUpper();})
+    ),
+    frc2::InstantCommand([]{}),
+    [this]{return !climberSubsystem.isRetracted();}
+  ));
 
   frc2::JoystickButton(&control2, 6).WhenPressed(toggle_lower_arms);
   frc2::JoystickButton(&control2, 5).ToggleWhenPressed(upper_arms_release);
