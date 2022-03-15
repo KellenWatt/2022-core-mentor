@@ -40,7 +40,9 @@ RobotContainer::RobotContainer() : transportSubsystem(frc::DriverStation::GetAll
   innerTimer.Start();
   innerTimer.Reset();
   transportSubsystem.SetDefaultCommand(frc2::RunCommand([this] {
-    if(frc::DriverStation::IsAutonomous() || control1.GetRawButton(1)) return;
+    // uncomment this line if the shooter bug pops up again.
+    // if(frc::DriverStation::IsAutonomous() || control1.GetRawButton(1)) return;
+    if(frc::DriverStation::IsAutonomous()) return;
     if(!transportSubsystem.hasOuterBall() || !transportSubsystem.hasInnerBall()) {
       transportSubsystem.enableOuterBelt();
     } else {
@@ -162,7 +164,7 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&control2, 5).ToggleWhenPressed(upper_arms_release);
 #endif
 
-// specifically inlined commands
+  // specifically inlined commands. Moved here to reduce duplication between control schemes
   // shooting
 #ifdef USE_XBOX_CONTROLLER
   frc2::JoystickButton(&controller, frc::XboxController::Button::kB)
