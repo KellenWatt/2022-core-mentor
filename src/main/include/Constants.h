@@ -4,7 +4,7 @@
 
 #pragma once
 
-// #define USE_XBOX_CONTROLS
+#define USE_XBOX_CONTROLS
 
 namespace constants {
     constexpr int CONTROL1 = 0;
