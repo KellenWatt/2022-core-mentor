@@ -11,7 +11,7 @@ DriveCommand::DriveCommand(DriveSubsystem *drive, frc::Joystick *stick) :
 
 void DriveCommand::Execute() {
 #ifdef USE_XBOX_CONTROLS
-    driveSubsystem->drive(control->GetLeftX(), -control->GetLeftY(), control->GetRightX());
+    driveSubsystem->drive(0.9*control->GetLeftX(), 0.9*-control->GetLeftY(), 0.9*control->GetRightX());
 #else
     driveSubsystem->drive(control->GetX(), -control->GetY(), control->GetZ());
 #endif
