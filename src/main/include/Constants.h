@@ -26,8 +26,10 @@ namespace constants {
         constexpr double DEFAULT_DEADBAND = 0.15;
         constexpr double ROTATION_ADJUSTMENT_RATE = 0.05;
 
-        constexpr double ROTARTION_REDUCTION = 0.6;
+        constexpr double ROTATION_REDUCTION = 0.6;
         constexpr double SELF_ROTATION_SPEED = 0.6;
+
+        constexpr double RAMP_COEFFICIENT = 0.5;
     }
 
     namespace intake {
