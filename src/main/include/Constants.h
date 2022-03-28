@@ -49,7 +49,7 @@ namespace constants {
         namespace pid {
             constexpr double P = 7e-5;
             constexpr double I = 5e-7;
-            // constexpr double D = 0.01; // not using
+            constexpr double D = 1.5e-4;
             constexpr double FF = 1e-5;
         }
     }
