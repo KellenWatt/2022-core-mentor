@@ -51,7 +51,11 @@ void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool c
         // Get angle, shift to [-180,180), normalize
         double rotOffset = (gyro.GetAngle() - (360 * (gyro.GetAngle() >= 180))) / 180;
         rotOffset *= -constants::drive::ROTATION_ADJUSTMENT_RATE;
-        mecanumDrive.DriveCartesian(realY, realX, fmin(realZ + rotOffset, 1));
+        double rot = fmin(realZ + rotOffset, 1);
+        if(realZ < 0) {
+            rot = fmax(realZ + rotOffset, -1);
+        }
+        mecanumDrive.DriveCartesian(realY, realX, rot);
     }
 }
 
