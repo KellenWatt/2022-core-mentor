@@ -11,6 +11,8 @@
 #include <AHRS.h>
 #include <frc/SPI.h>
 
+#include <cmath>
+
 class DriveSubsystem : public frc2::SubsystemBase {
 public:
     DriveSubsystem();
@@ -77,7 +79,7 @@ private:
     }
 
     double ramp(double actual, double expected, double adjRate) {
-        if((expected >= 0 && actual < expected) || (expected < 0 && actual > expected)) {
+        if((expected > 0 && actual < expected) || (expected < 0 && actual > expected)) {
             return actual + ((expected - actual) * 0.1 * adjRate);
         }
         return expected;

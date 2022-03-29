@@ -23,13 +23,13 @@ namespace constants {
 
         constexpr int MOTOR_COUNT = 4;
 
-        constexpr double DEFAULT_DEADBAND = 0.15;
-        constexpr double ROTATION_ADJUSTMENT_RATE = 0.05;
+        constexpr double DEFAULT_DEADBAND = 0.10;
+        constexpr double ROTATION_ADJUSTMENT_RATE = 0.15;
 
         constexpr double ROTATION_REDUCTION = 0.6;
         constexpr double SELF_ROTATION_SPEED = 0.6;
 
-        constexpr double RAMP_COEFFICIENT = 0.5;
+        constexpr double RAMP_COEFFICIENT = 0.45;
     }
 
     namespace intake {
