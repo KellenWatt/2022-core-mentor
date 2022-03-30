@@ -36,7 +36,7 @@ void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool c
 
     realX = ramp(realX, xSpeed * 0.6, constants::drive::RAMP_COEFFICIENT);
     realY = ramp(realY, ySpeed, constants::drive::RAMP_COEFFICIENT);
-    //realZ = ramp(realZ, rotation, 1); // probably fine
+
     // mecanum drive does not inherently apply deadband to rotation, 
     // so we do that instead.
     rotation = frc::ApplyDeadband(rotation, deadband);
