@@ -11,6 +11,8 @@
 #include <AHRS.h>
 #include <frc/SPI.h>
 
+#include <cmath>
+
 class DriveSubsystem : public frc2::SubsystemBase {
 public:
     DriveSubsystem();
@@ -36,6 +38,10 @@ public:
     void squareRotInput( bool square = false) {squareRot = square;}
 private:
     double deadband;
+
+    double realX = 0;
+    double realY = 0;
+    double realZ = 0;
 
     bool squareX;
     bool squareY;
@@ -70,6 +76,13 @@ private:
         f(rearLeftEnc);
         f(frontRightEnc);
         f(rearRightEnc);
+    }
+
+    double ramp(double actual, double expected, double adjRate) {
+        if((expected > 0 && actual < expected) || (expected < 0 && actual > expected)) {
+            return actual + ((expected - actual) * 0.1 * adjRate);
+        }
+        return expected;
     }
 
 };

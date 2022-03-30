@@ -32,21 +32,28 @@ void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool c
     if(squareRot) {
         rotation = abs(rotation) * rotation;
     }
+    
+
+    realX = ramp(realX, xSpeed * 0.6, constants::drive::RAMP_COEFFICIENT);
+    realY = ramp(realY, ySpeed, constants::drive::RAMP_COEFFICIENT);
+    //realZ = ramp(realZ, rotation, 1); // probably fine
     // mecanum drive does not inherently apply deadband to rotation, 
     // so we do that instead.
-    if(rotation < deadband) {
-        frc::ApplyDeadband(rotation, deadband);
-    }
+    rotation = frc::ApplyDeadband(rotation, deadband);
     if(rotation > deadband || rotation < -deadband) {
         // reset the gyro if rotating to help eliminate noise.
         gyro.Reset();
-        mecanumDrive.DriveCartesian(ySpeed, xSpeed, rotation * constants::drive::ROTARTION_REDUCTION);
+        mecanumDrive.DriveCartesian(realY, realX, rotation * constants::drive::ROTATION_REDUCTION);
     } else {
         // adjust rotation to compensate for hysteresis
         // Get angle, shift to [-180,180), normalize
         double rotOffset = (gyro.GetAngle() - (360 * (gyro.GetAngle() >= 180))) / 180;
         rotOffset *= -constants::drive::ROTATION_ADJUSTMENT_RATE;
-        mecanumDrive.DriveCartesian(ySpeed, xSpeed, fmin(rotation + rotOffset, 1));
+        double rot = fmin(rotation + rotOffset, 1);
+        if(realZ < 0) {
+            rot = fmax(rotation + rotOffset, -1);
+        }
+        mecanumDrive.DriveCartesian(realY, realX, rot);
     }
 }
 

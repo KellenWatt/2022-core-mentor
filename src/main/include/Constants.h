@@ -4,13 +4,14 @@
 
 #pragma once
 
-// #define USE_XBOX_CONTROLS
+#define USE_XBOX_CONTROLS
 
 namespace constants {
     constexpr int CONTROL1 = 0;
     constexpr int CONTROL2 = 1;
 
-    constexpr int XBOX_CONTROL = 0;
+    constexpr int XBOX_CONTROL_1 = 0;
+    constexpr int XBOX_CONTROL_2 = 1;
 
     namespace drive {
         constexpr int FRONT_LEFT_MOTOR = 4;
@@ -22,11 +23,13 @@ namespace constants {
 
         constexpr int MOTOR_COUNT = 4;
 
-        constexpr double DEFAULT_DEADBAND = 0.15;
-        constexpr double ROTATION_ADJUSTMENT_RATE = 0.05;
+        constexpr double DEFAULT_DEADBAND = 0.10;
+        constexpr double ROTATION_ADJUSTMENT_RATE = 0.15;
 
-        constexpr double ROTARTION_REDUCTION = 0.6;
+        constexpr double ROTATION_REDUCTION = 0.6;
         constexpr double SELF_ROTATION_SPEED = 0.6;
+
+        constexpr double RAMP_COEFFICIENT = 0.45;
     }
 
     namespace intake {
@@ -46,7 +49,7 @@ namespace constants {
         namespace pid {
             constexpr double P = 7e-5;
             constexpr double I = 5e-7;
-            // constexpr double D = 0.01; // not using
+            constexpr double D = 1.5e-4;
             constexpr double FF = 1e-5;
         }
     }

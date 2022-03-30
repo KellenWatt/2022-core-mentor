@@ -6,7 +6,7 @@ ShooterSubsystem::ShooterSubsystem(double rpm) :flywheelRPM(rpm) {
     flywheelPID.SetP(constants::shooter::pid::P);
     flywheelPID.SetI(constants::shooter::pid::I);
     flywheelPID.SetFF(constants::shooter::pid::FF);
-    // flywheelPID.SetD(constants::shooter::pid::D);
+    flywheelPID.SetD(constants::shooter::pid::D);
     disableFlywheel();
 }
 
