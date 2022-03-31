@@ -11,6 +11,9 @@
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/WaitCommand.h>
+#include <frc2/command/ParallelRaceGroup.h>
+
+#include <frc/smartdashboard/SendableChooser.h>
 
 #include "commands/DriveToLineCommand.h"
 #include "commands/DriveUntilCommand.h"
@@ -60,7 +63,10 @@ private:
   frc::Timer innerTimer;
   void ConfigureButtonBindings();
 
-  frc2::SequentialCommandGroup autocmd{
+
+  frc::SendableChooser<frc2::Command*> autoChooser;
+
+  frc2::SequentialCommandGroup singleAutocmd{
     frc2::InstantCommand([this]{transportSubsystem.disableInnerBelt();}),
     DriveToLineCommand(&driveSubsystem, false),
     frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
@@ -69,6 +75,39 @@ private:
     }),
     frc2::RunCommand([this] {
       transportSubsystem.enableInnerBelt();
+    })
+  };
+
+  frc2::SequentialCommandGroup doubleAutocmd {
+    frc2::InstantCommand([this]{transportSubsystem.disableInnerBelt();}),
+    DriveToLineCommand(&driveSubsystem, true),
+    frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
+    DriveUntilCommand(&driveSubsystem, true, [this] {return driveSubsystem.distance() >= 30;}),
+    frc2::InstantCommand([this]{driveSubsystem.resetGyro();}),
+    frc2::RunCommand([this] {driveSubsystem.freeTurn(0.5);}).WithInterrupt([this]{return driveSubsystem.orientation() >= 180;}),
+    frc2::InstantCommand([this]{driveSubsystem.resetGyro();}),
+    // frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
+    // DriveUntilCommand(&driveSubsystem, true, [this] {return driveSubsystem.distance() >= 6;}),
+    frc2::RunCommand([this] {
+      transportSubsystem.enableInnerBelt();
+      transportSubsystem.enableOuterBelt();
+    })
+  };
+
+  frc2::SequentialCommandGroup sidewaysAutocmd {
+    frc2::InstantCommand([this]{transportSubsystem.disableInnerBelt();}),
+    frc2::RunCommand([this]{driveSubsystem.drive(0, -0.5, 0);}).WithInterrupt([this]{return driveSubsystem.seesLine();}),
+    frc2::RunCommand([this]{driveSubsystem.drive(0, -0.5, 0);}).WithTimeout(1.5_s),
+    frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
+    DriveUntilCommand(&driveSubsystem, true, [this] {return driveSubsystem.distance() >= 6;}),
+    frc2::InstantCommand([this]{driveSubsystem.resetGyro();}),
+    frc2::RunCommand([this] {driveSubsystem.freeTurn(0.5);}).WithInterrupt([this]{return driveSubsystem.orientation() >= 90;}),
+    frc2::InstantCommand([this] {driveSubsystem.resetGyro();}),
+    // frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
+    // DriveUntilCommand(&driveSubsystem, true, [this] {return driveSubsystem.distance() >= 6;}),
+    frc2::RunCommand([this] {
+      transportSubsystem.enableInnerBelt();
+      transportSubsystem.enableOuterBelt();
     })
   };
 };

@@ -6,6 +6,8 @@
 
 #include <frc/DriverStation.h>
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 #include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/StartEndCommand.h>
 #include <frc2/command/SequentialCommandGroup.h>
@@ -29,7 +31,11 @@
 #include <cstdio>
 
 RobotContainer::RobotContainer() : transportSubsystem(frc::DriverStation::GetAlliance()) {
-  autocmd.AddRequirements(&transportSubsystem);
+  singleAutocmd.AddRequirements(&transportSubsystem);
+  autoChooser.SetDefaultOption("Single Cargo", &singleAutocmd);
+  autoChooser.AddOption("Double Cargo", &doubleAutocmd);
+  autoChooser.AddOption("Sideways Double", &sidewaysAutocmd);
+  frc::SmartDashboard::PutData("Auto Mode", &autoChooser);
 #ifdef USE_XBOX_CONTROLS
   driveSubsystem.SetDefaultCommand(DriveCommand(&driveSubsystem, &controller1));
 #else
@@ -213,6 +219,6 @@ void RobotContainer::ConfigureButtonBindings() {
 }
 
 frc2::Command* RobotContainer::autonomousCommand() {
-  return &autocmd;  
+  return autoChooser.GetSelected();
 }
 
