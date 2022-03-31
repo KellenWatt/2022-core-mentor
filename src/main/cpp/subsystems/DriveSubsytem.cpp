@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <frc/MathUtil.h>
+#include <cstdio>
 
 DriveSubsystem::DriveSubsystem() : DriveSubsystem(constants::drive::DEFAULT_DEADBAND) {}
 
@@ -22,7 +23,7 @@ DriveSubsystem::DriveSubsystem(double deadband, bool squareXInput, bool squareYI
     resetGyro();
 }
 
-void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool correctRotation) {
+void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool rampSpeed) {
     if(squareX) {
         xSpeed = abs(xSpeed) * xSpeed;
     }
@@ -33,9 +34,13 @@ void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool c
         rotation = abs(rotation) * rotation;
     }
     
-
-    realX = ramp(realX, xSpeed * 0.6, constants::drive::RAMP_COEFFICIENT);
-    realY = ramp(realY, ySpeed, constants::drive::RAMP_COEFFICIENT);
+    if(rampSpeed) {
+        realX = ramp(realX, xSpeed * 0.6, constants::drive::RAMP_COEFFICIENT);
+        realY = ramp(realY, ySpeed, constants::drive::RAMP_COEFFICIENT);
+    } else {
+        realX = xSpeed;
+        realY = ySpeed;
+    }
 
     // mecanum drive does not inherently apply deadband to rotation, 
     // so we do that instead.
@@ -58,7 +63,7 @@ void DriveSubsystem::drive(double xSpeed, double ySpeed, double rotation, bool c
 }
 
 void DriveSubsystem::freeTurn(double speed) {
-    speed = pow(speed, 1 + squareRot * 0.5);
+    printf("angle: %f\n", gyro.GetAngle());
     mecanumDrive.DriveCartesian(0, 0, speed);
 }
 
@@ -81,7 +86,7 @@ void DriveSubsystem::resetGyro() {
 }
 
 double DriveSubsystem::orientation() {
-    return gyro.GetYaw();
+    return gyro.GetAngle();
 }
 
 bool DriveSubsystem::seesLine() {

@@ -7,9 +7,9 @@ DriveUntilCommand::DriveUntilCommand(DriveSubsystem* system, bool forward, std::
 
 void DriveUntilCommand::Execute() {
     if(forward) {
-        drive->drive(0, 0.5, 0);
+        drive->drive(0, 0.5, 0, false);
     } else {
-        drive->drive(0, -0.5, 0);
+        drive->drive(0, -0.5, 0, false);
     }
 }
 

@@ -34,7 +34,7 @@ RobotContainer::RobotContainer() : transportSubsystem(frc::DriverStation::GetAll
   singleAutocmd.AddRequirements(&transportSubsystem);
   autoChooser.SetDefaultOption("Single Cargo", &singleAutocmd);
   autoChooser.AddOption("Double Cargo", &doubleAutocmd);
-  autoChooser.AddOption("Sideways Double", &sidewaysAutocmd);
+  autoChooser.AddOption("(Don't use) Sideways Double", &sidewaysAutocmd);
   frc::SmartDashboard::PutData("Auto Mode", &autoChooser);
 #ifdef USE_XBOX_CONTROLS
   driveSubsystem.SetDefaultCommand(DriveCommand(&driveSubsystem, &controller1));
