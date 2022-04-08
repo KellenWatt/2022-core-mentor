@@ -175,6 +175,8 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&control1, 11).ToggleWhenPressed(DriveToLineCommand(&driveSubsystem, false));
   // disable/re-enable shooter
   frc2::JoystickButton(&control1, 7).ToggleWhenPressed(toggle_shooter_wheel);
+  frc2::JoystickButton(&control1, 8).ToggleWhenPressed(toggle_transport_belts);
+  
 
   // Joystick 2
   frc2::JoystickButton(&control2, 1).WhenPressed(toggle_intake_arm);
