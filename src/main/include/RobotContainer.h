@@ -80,6 +80,7 @@ private:
 
   frc2::SequentialCommandGroup doubleAutocmd {
     frc2::InstantCommand([this]{
+      shooterSubsystem.setSpeed(shooterSubsystem.getSpeed() - 100);
       transportSubsystem.disableInnerBelt();
       transportSubsystem.enableOuterBelt();
       intakeSubsystem.startRoller();
@@ -89,7 +90,6 @@ private:
     DriveToLineCommand(&driveSubsystem, true),
     frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
     DriveUntilCommand(&driveSubsystem, true, [this] {return driveSubsystem.distance() >= 30;}),
-    frc2::WaitCommand(0.25_s), 
     frc2::InstantCommand([this]{
       driveSubsystem.resetGyro();
       transportSubsystem.disableOuterBelt();
@@ -105,7 +105,11 @@ private:
       transportSubsystem.disableOuterBelt();
     }),
     frc2::WaitCommand(1.0_s),
-    frc2::InstantCommand([this] {transportSubsystem.enableOuterBelt();}),
+    frc2::InstantCommand([this] {
+      transportSubsystem.enableOuterBelt();
+    }),
+    frc2::WaitCommand(4.0_s),
+    frc2::InstantCommand([this] {shooterSubsystem.resetSpeed();}),
   };
 
   frc2::SequentialCommandGroup sidewaysAutocmd {
@@ -122,6 +126,6 @@ private:
     frc2::RunCommand([this] {
       transportSubsystem.enableInnerBelt();
       transportSubsystem.enableOuterBelt();
-    })
+    }),
   };
 };
