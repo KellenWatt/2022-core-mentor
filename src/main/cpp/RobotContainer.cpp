@@ -77,6 +77,15 @@ void RobotContainer::ConfigureButtonBindings() {
     [this]{shooterSubsystem.enableFlywheel();},
     {&shooterSubsystem}
   );
+
+  auto toggle_transport_belts = frc2::StartEndCommand(
+    [this]{
+      transportSubsystem.disableOuterBelt();
+      transportSubsystem.disableInnerBelt();
+    },
+    []{},
+    {&transportSubsystem}
+  );
   // Run the intake roller. Run it in reverse if button 11 pressed on Joystick, 
   // or left bumper pressed on Xbox controller.
   auto run_intake_roller = frc2::FunctionalCommand(
@@ -134,7 +143,12 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::Trigger([this]{return controller1.GetPOV() == 180;}).ToggleWhenActive(DriveToLineCommand(&driveSubsystem, false));
   // D-pad down - drive forwards to line
   frc2::Trigger([this]{return controller1.GetPOV() == 0;}).ToggleWhenActive(DriveToLineCommand(&driveSubsystem, true));
-  frc2::JoystickButton(&controller1, frc::XboxController::Button::kBack).ToggleWhenPressed(toggle_shooter_wheel);
+  (frc2::JoystickButton(&controller1, frc::XboxController::Button::kBack) && 
+   frc2::JoystickButton(&controller1, frc::XboxController::Button::kLeftBumper) &&
+   frc2::JoystickButton(&controller1, frc::XboxController::Button::kRightBumper)).ToggleWhenActive(toggle_shooter_wheel);
+  (frc2::JoystickButton(&controller1, frc::XboxController::Button::kStart) && 
+   frc2::JoystickButton(&controller1, frc::XboxController::Button::kLeftBumper) &&
+   frc2::JoystickButton(&controller1, frc::XboxController::Button::kRightBumper)).ToggleWhenActive(toggle_transport_belts);
   // - Shoot
 
   // Controller 2
