@@ -93,11 +93,12 @@ private:
     frc2::InstantCommand([this]{
       driveSubsystem.resetGyro();
       transportSubsystem.disableOuterBelt();
-      intakeSubsystem.stopRoller();
+      // intakeSubsystem.stopRoller();
     }),
     frc2::RunCommand([this] {driveSubsystem.freeTurn(0.3);}).WithInterrupt([this]{return driveSubsystem.orientation() >= 168;}),
     frc2::InstantCommand([this]{driveSubsystem.drive(0,0,0);}),
     frc2::InstantCommand([this]{driveSubsystem.resetGyro();}),
+    frc2::WaitCommand(0.35_s),
     // frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
     // DriveUntilCommand(&driveSubsystem, true, [this] {return driveSubsystem.distance() >= 6;}),
     frc2::InstantCommand([this] {
@@ -109,7 +110,10 @@ private:
       transportSubsystem.enableOuterBelt();
     }),
     frc2::WaitCommand(4.0_s),
-    frc2::InstantCommand([this] {shooterSubsystem.resetSpeed();}),
+    frc2::InstantCommand([this] {
+      shooterSubsystem.resetSpeed();
+      intakeSubsystem.stopRoller();  
+    }),
   };
 
   frc2::SequentialCommandGroup sidewaysAutocmd {
