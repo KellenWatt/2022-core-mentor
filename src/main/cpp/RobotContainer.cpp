@@ -27,6 +27,7 @@
 #include "commands/FlywheelCommand.h"
 #include "commands/DriveToLineCommand.h"
 #include "commands/DriveUntilCommand.h"
+#include "commands/TransportCommand.h"
 
 #include <cstdio>
 
@@ -42,26 +43,7 @@ RobotContainer::RobotContainer() : transportSubsystem(frc::DriverStation::GetAll
   driveSubsystem.SetDefaultCommand(DriveCommand(&driveSubsystem, &control1));
 #endif
   shooterSubsystem.SetDefaultCommand(FlywheelCommand(&shooterSubsystem));
-
-  innerTimer.Start();
-  innerTimer.Reset();
-  transportSubsystem.SetDefaultCommand(frc2::RunCommand([this] {
-    // uncomment this line if the shooter bug pops up again.
-    // if(frc::DriverStation::IsAutonomous() || control1.GetRawButton(1)) return;
-    if(frc::DriverStation::IsAutonomous()) return;
-    if(!transportSubsystem.hasOuterBall() || !transportSubsystem.hasInnerBall()) {
-      transportSubsystem.enableOuterBelt();
-    } else {
-      transportSubsystem.disableOuterBelt();
-    }
-
-    if(!transportSubsystem.hasInnerBall()) {
-      transportSubsystem.enableInnerBelt();
-      innerTimer.Reset();
-    } else if(innerTimer.HasElapsed(0.15_s)) {
-        transportSubsystem.disableInnerBelt();
-    }
-  }, {&transportSubsystem}));
+  transportSubsystem.SetDefaultCommand(TransportCommand(&transportSubsystem));
 
   // Configure the button bindings
   ConfigureButtonBindings();
