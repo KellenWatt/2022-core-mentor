@@ -117,17 +117,26 @@ private:
   };
 
   frc2::SequentialCommandGroup sidewaysAutocmd {
-    frc2::InstantCommand([this]{transportSubsystem.disableInnerBelt();}),
-    frc2::RunCommand([this]{driveSubsystem.drive(0, -0.5, 0);}).WithInterrupt([this]{return driveSubsystem.seesLine();}),
-    frc2::RunCommand([this]{driveSubsystem.drive(0, -0.5, 0);}).WithTimeout(1.5_s),
+    frc2::InstantCommand([this]{
+      transportSubsystem.disableInnerBelt();
+      transportSubsystem.disableOuterBelt();
+      intakeSubsystem.extendArm();
+      intakeSubsystem.startRoller();
+      driveSubsystem.resetGyro();
+    }),
+    frc2::RunCommand([this]{driveSubsystem.drive(0, -0.5, 0, false);}).WithInterrupt([this]{return driveSubsystem.seesLine();}),
+    frc2::RunCommand([this]{driveSubsystem.drive(0, -0.5, 0, false);}).WithTimeout(1.5_s),
     frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
     DriveUntilCommand(&driveSubsystem, true, [this] {return driveSubsystem.distance() >= 6;}),
     frc2::InstantCommand([this]{driveSubsystem.resetGyro();}),
-    frc2::RunCommand([this] {driveSubsystem.freeTurn(0.5);}).WithInterrupt([this]{return driveSubsystem.orientation() >= 90;}),
-    frc2::InstantCommand([this] {driveSubsystem.resetGyro();}),
+    frc2::RunCommand([this] {driveSubsystem.freeTurn(0.3);}).WithInterrupt([this]{return driveSubsystem.orientation() >= 90;}),
+    frc2::InstantCommand([this] {
+      driveSubsystem.resetGyro();
+      driveSubsystem.drive(0,0,0);
+    }),
     // frc2::InstantCommand([this]{driveSubsystem.resetDistance();}),
     // DriveUntilCommand(&driveSubsystem, true, [this] {return driveSubsystem.distance() >= 6;}),
-    frc2::RunCommand([this] {
+    frc2::InstantCommand([this] {
       transportSubsystem.enableInnerBelt();
       transportSubsystem.enableOuterBelt();
     }),
