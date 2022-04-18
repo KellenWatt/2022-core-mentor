@@ -54,7 +54,7 @@ private:
   TransportSubsystem transportSubsystem;
 #ifdef USE_XBOX_CONTROLS
   frc::XboxController controller1{constants::XBOX_CONTROL_1};
-  frc::XboxController controller2{constants::XBOX_CONTROL_2};
+  // frc::XboxController controller2{constants::XBOX_CONTROL_2};
 #else
   frc::Joystick control1{constants::CONTROL1};
   frc::Joystick control2{constants::CONTROL2};

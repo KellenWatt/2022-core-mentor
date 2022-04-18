@@ -134,19 +134,19 @@ void RobotContainer::ConfigureButtonBindings() {
   // - Shoot
 
   // Controller 2
-  frc2::JoystickButton(&controller2, frc::XboxController::Button::kB).ToggleWhenPressed(toggle_intake_arm);
-  (frc2::JoystickButton(&controller2, frc::XboxController::Button::kA) && 
-    !frc2::JoystickButton(&controller2, frc::XboxController::Button::kLeftBumper))
+  frc2::JoystickButton(&controller1, frc::XboxController::Button::kB).ToggleWhenPressed(toggle_intake_arm);
+  (frc2::JoystickButton(&controller1, frc::XboxController::Button::kA) && 
+    !frc2::JoystickButton(&controller1, frc::XboxController::Button::kLeftBumper))
       .WhileActiveOnce(run_intake_roller);
-  (frc2::JoystickButton(&controller2, frc::XboxController::Button::kA) && 
-    frc2::JoystickButton(&controller2, frc::XboxController::Button::kLeftBumper))
+  (frc2::JoystickButton(&controller1, frc::XboxController::Button::kA) && 
+    frc2::JoystickButton(&controller1, frc::XboxController::Button::kLeftBumper))
       .WhileActiveOnce(reverse_intake_roller);
-  frc2::JoystickButton(&controller2, frc::XboxController::Button::kX).WhileActiveOnce(reverse_transport);
+  frc2::JoystickButton(&controller1, frc::XboxController::Button::kX).WhileActiveOnce(reverse_transport);
   
-  (frc2::JoystickButton(&controller2, frc::XboxController::Button::kY) && 
-    !frc2::JoystickButton(&controller2, frc::XboxController::Button::kLeftBumper)).WhenActive(toggle_lower_arms);
-  (frc2::JoystickButton(&controller2, frc::XboxController::Button::kY) && 
-    frc2::JoystickButton(&controller2, frc::XboxController::Button::kLeftBumper)).ToggleWhenActive(upper_arms_release);
+  (frc2::JoystickButton(&controller1, frc::XboxController::Button::kY) && 
+    !frc2::JoystickButton(&controller1, frc::XboxController::Button::kLeftBumper)).WhenActive(toggle_lower_arms);
+  (frc2::JoystickButton(&controller1, frc::XboxController::Button::kY) && 
+    frc2::JoystickButton(&controller1, frc::XboxController::Button::kLeftBumper)).ToggleWhenActive(upper_arms_release);
 
 #else
   // Button bindings for Joysticks.
@@ -189,8 +189,8 @@ void RobotContainer::ConfigureButtonBindings() {
   
   // auto-climbing
 #ifdef USE_XBOX_CONTROLS 
-  (frc2::JoystickButton(&controller2, frc::XboxController::Button::kStart) &&
-    frc2::JoystickButton(&controller2, frc::XboxController::Button::kBack))
+  (frc2::JoystickButton(&controller1, frc::XboxController::Button::kStart) &&
+    frc2::JoystickButton(&controller1, frc::XboxController::Button::kBack))
 #else
   frc2::JoystickButton(&control2, 8)
 #endif
